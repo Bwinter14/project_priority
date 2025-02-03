@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint and Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Linting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pylint
+
+      - name: Run Flake8
+        run: flake8 .
+
+      - name: Run Pylint on Module
+        run: pylint --disable=R,C,W project_priority
+
+  test:
+    name: Integration Tests with Odoo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Odoo Tests for Project Priority Module
+        run: |
+          # Run an Odoo container mounting the module directory.
+          # The container will run tests in test mode (using --test-enable) on the 'project_priority' module.
+          docker run -d --name odoo-test \
+            -p 8069:8069 \
+            -v $GITHUB_WORKSPACE/project_priority:/mnt/odoo/custom:ro \
+            odoo:18.0 \
+            --addons-path=/mnt/odoo/custom,/usr/lib/python3/dist-packages/odoo/addons \
+            --test-enable -d test_db --stop-after-init -i project_priority
+
+          # Wait for Odoo to complete the tests.
+          # (Adjust the sleep duration if your tests take longer.)
+          sleep 30
+
+          # Output the container logs to see the test results.
+          docker logs odoo-test
+
+          # Clean up the container.
+          docker rm -f odoo-test
