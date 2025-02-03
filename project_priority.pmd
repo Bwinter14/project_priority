@@ -1,0 +1,124 @@
+# Project Management Document (PMD) for Project Priority Module
+
+## Project Summary
+The **Project Priority Module** is designed for Odoo 18 to help companies manage and prioritize projects efficiently. The module automatically assigns priorities based on deadlines, stock/inventory impacts, customer urgency, and project dependencies, while still allowing for manual adjustments and CEO-level overrides. It integrates seamlessly with Odoo’s project management, chatter, and reporting functionalities.
+
+## Objectives
+- **Automated Priority Assignment:**  
+  Calculate project priorities based on rules such as deadlines (with higher weight), inventory impacts, and customer-related urgency.
+  
+- **Manual Overrides & CEO Control:**  
+  Enable authorized users to adjust priorities manually, with ultimate control available to the CEO.
+  
+- **Enhanced Visual Indicators:**  
+  Display priority statuses via Kanban, List, and Calendar views, including a color-coded Calendar view.
+  
+- **Chatter Integration:**  
+  Automatically log all priority changes in Odoo Chatter.
+  
+- **Reporting & Filtering:**  
+  Provide filtering and reporting tools to monitor and analyze high-priority projects.
+
+## Scope
+- **Integration:**  
+  The module integrates with Odoo’s project management, chatter, and reporting systems.
+  
+- **Compliance:**  
+  Adheres to Odoo 18 coding guidelines and module structure standards.
+  
+- **Deployment:**  
+  Ready for deployment on Odoo.sh with CI/CD managed via GitHub Actions.
+
+## Technical Requirements
+- **Platform:** Odoo 18.0  
+- **Backend:** Python (with Odoo ORM)  
+- **Frontend:** XML for views; JavaScript as needed for advanced UI features  
+- **Testing:** Unit and integration tests run via GitHub Actions using Docker  
+- **CI/CD:** Configured with GitHub Actions (linting, testing, integration)  
+- **Deployment:** Compatible with Odoo.sh
+
+## Module Features
+1. **Automated Priority Assignment:**  
+   - Evaluates projects based on deadlines, inventory and customer impacts, and dependencies.
+   
+2. **Manual Priority Override:**  
+   - Allows users (with role-based permissions) to manually adjust priorities, with the CEO having ultimate control.
+   
+3. **Visual Priority Indicators:**  
+   - Supports Kanban, List, and Calendar views with color-coded priority indicators in the Calendar view.
+   
+4. **Chatter Integration:**  
+   - Logs any changes in priority to Odoo Chatter (notifications are not optional).
+   
+5. **Reporting & Filtering:**  
+   - Enables filtering and reporting on projects by priority level.
+
+## Repository & Module Structure
+The repository follows standard Odoo module guidelines. The recommended structure is:
+project_priority/
+├── PMD.md                           # Project Management Document for bolt.new
+├── README.md                         # General repository documentation
+├── .github/
+│   └── workflows/
+│       └── ci.yml                     # GitHub Actions workflow for CI/CD
+├── __manifest__.py
+├── __init__.py
+├── models/
+│   ├── __init__.py
+│   └── project_priority.py
+├── views/
+│   ├── project_priority_views.xml
+│   └── project_priority_templates.xml
+├── security/
+│   ├── ir.model.access.csv
+│   └── security.xml
+└── static/
+    └── description/
+        ├── icon.png
+        └── screenshot.png
+
+
+## Development Workflow
+- **Branching:**  
+  Use feature branches for development. Merge changes into `main` via pull requests after code review.
+  
+- **Testing & Quality:**  
+  - Use tools such as Flake8 and Pylint for linting.
+  - Run tests locally and via GitHub Actions.
+  
+- **CI/CD Pipeline:**  
+  The GitHub Actions workflow (`.github/workflows/ci.yml`) is set up to perform linting and integration testing using Docker with the Odoo 18 image.
+  
+- **Code Reviews:**  
+  Maintain high-quality code standards and adherence to Odoo's coding guidelines.
+
+## CI/CD Pipeline Details
+- **Linting Job:**  
+  Checks code quality using Flake8 and Pylint.
+  
+- **Testing Job:**  
+  Runs Odoo integration tests by launching an Odoo container, mounting the module, and running tests with the `--test-enable` flag.
+
+## Deployment
+- **Odoo.sh Deployment:**  
+  Ensure the module follows Odoo manifest standards for a smooth deployment on Odoo.sh.
+  
+- **Documentation:**  
+  Keep the README updated with installation, configuration, and usage instructions.
+
+## Future Enhancements
+- **Configurable Weighting:**  
+  Allow dynamic configuration of rule weighting for priority assignment via the UI.
+  
+- **Enhanced Analytics:**  
+  Build dashboard analytics to visualize project priority trends.
+  
+- **Expanded Integration:**  
+  Integrate with additional Odoo modules for extended functionality.
+
+## License
+- This module is distributed under the **AGPL v3** license.
+
+## Contact Information
+- **Developer:** Bwinter14
+- **GitHub:** [https://github.com/Bwinter14](https://github.com/Bwinter14)
