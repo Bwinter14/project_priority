@@ -1,4 +1,4 @@
-# Project-Priority
+# Project_Priority
 Project Priority Module for Odoo 18
 # Project Priority Module for Odoo 18
 
