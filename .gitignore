@@ -169,3 +169,48 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Odoo specific
+# Odoo server and web data
+filestore/
+sessions/
+addons/web/static/lib/
+addons/web/static/src/lib/
+
+# Odoo workspace files
+.settings/
+.project
+.pydevproject
+.vscode/
+
+# Odoo database dumps
+*.dump
+*.sql
+
+# Odoo session files
+.session_*
+
+# Odoo log files
+odoo*.log
+server.log
+
+# Odoo configuration files
+.odoorc
+odoo.conf
+
+# Odoo backup files
+*.bak
+*.backup
+*~
+
+# Odoo generated files
+*.pot
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.mo
+*.egg-info
+*.egg
+.eggs/
+.installed.cfg

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_priority_user,project.project.priority.user,project.model_project_project,project_priority.group_project_priority_user,1,0,0,0
+access_project_priority_manager,project.project.priority.manager,project.model_project_project,project_priority.group_project_priority_manager,1,1,1,0
+access_project_priority_ceo,project.project.priority.ceo,project.model_project_project,project_priority.group_project_priority_ceo,1,1,1,1
+access_project_team_user,project.team.user,model_project_team,project_priority.group_project_priority_user,1,0,0,0
+access_project_team_manager,project.team.manager,model_project_team,project_priority.group_project_priority_manager,1,1,1,0
+access_project_team_priority_label_user,project.team.priority.label.user,model_project_team_priority_label,project_priority.group_project_priority_user,1,0,0,0
+access_project_team_priority_label_manager,project.team.priority.label.manager,model_project_team_priority_label,project_priority.group_project_priority_manager,1,1,1,1

@@ -10,9 +10,9 @@ class ProjectProject(models.Model):
         store=True,
         help='Automatically calculated priority score'
     )
-    manual_priority = fields.Selection([
-        ('0', 'Normal'),
-        ('1', 'High'),
-        ('2', 'Very High'),
-        ('3', 'Critical')
-    ], string='Manual Prior
+manual_priority = fields.Selection([
+    ('0', 'Normal'),
+    ('1', 'High'),
+    ('2', 'Very High'),
+    ('3', 'Critical')
+], string="Manual Priority")

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Team Form View -->
+        <record id="view_project_team_form" model="ir.ui.view">
+            <field name="name">project.team.form</field>
+            <field name="model">project.team</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Team Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="leader_id"/>
+                                <field name="current_capacity" widget="percentage"/>
+                                <field name="capacity_threshold" widget="percentage"/>
+                            </group>
+                            <group>
+                                <field name="deadline_threshold_days"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Team Members">
+                                <field name="member_ids" widget="many2many_tags"/>
+                            </page>
+                            <page string="Custom Priority Labels">
+                                <field name="custom_priority_labels">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="color" widget="color_picker"/>
+                                        <field name="weight"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Project Team Tree View -->
+        <record id="view_project_team_tree" model="ir.ui.view">
+            <field name="name">project.team.tree</field>
+            <field name="model">project.team</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="leader_id"/>
+                    <field name="current_capacity" widget="percentage"/>
+                    <field name="capacity_threshold" widget="percentage"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Project Form View Inheritance -->
+        <record id="view_project_priority_form" model="ir.ui.view">
+            <field name="name">project.priority.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options_active']" position="after">
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="priority_score" string="Priority Score"/>
+                                <div class="text-muted">
+                                    Automatically calculated priority score
+                                </div>
+                                <field name="priority_score" widget="percentage"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="manual_priority"/>
+                                <field name="manual_priority" widget="priority"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="inventory_impact"/>
+                                <field name="inventory_impact"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="customer_urgency"/>
+                                <field name="customer_urgency"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="team_id"/>
+                                <field name="team_id"/>
+                                <div class="text-muted">
+                                    Assigned team for this project
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('team_id', '=', False)]}">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="team_priority_label_id"/>
+                                <field name="team_priority_label_id" domain="[('team_id', '=', team_id)]"/>
+                                <div class="text-warning" attrs="{'invisible': [('team_capacity_warning', '=', False)]}">
+                                    ⚠️ Team is at capacity
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="dependency_project_ids"/>
+                                <field name="dependency_project_ids" widget="many2many_tags"/>
+                                <div class="text-muted" attrs="{'invisible': [('blocked_by_count', '=', 0)]}">
+                                    Blocked by <field name="blocked_by_count"/> projects
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" groups="project_priority.group_project_priority_ceo">
+                            <div class="o_setting_left_pane">
+                                <field name="is_ceo_override"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_ceo_override"/>
+                                <div class="text-muted">
+                                    Override project priority (CEO only)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Project Kanban View Inheritance -->
+        <record id="view_project_priority_kanban" model="ir.ui.view">
+            <field name="name">project.priority.kanban</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_project_kanban_main')]" position="inside">
+                    <div class="o_kanban_record_bottom">
+                        <div class="oe_kanban_bottom_left">
+                            <field name="priority_score" widget="percentage"/>
+                            <field name="team_id"/>
+                        </div>
+                        <div class="oe_kanban_bottom_right">
+                            <field name="manual_priority" widget="priority"/>
+                            <field name="team_priority_label_id" widget="label_selection"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Project Search View Inheritance -->
+        <record id="view_project_priority_search" model="ir.ui.view">
+            <field name="name">project.priority.search</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="priority_score"/>
+                    <field name="manual_priority"/>
+                    <field name="customer_urgency"/>
+                    <field name="inventory_impact"/>
+                    <field name="team_id"/>
+                    <field name="team_priority_label_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='Partner']" position="after">
+                    <filter string="Team" name="team" context="{'group_by': 'team_id'}"/>
+                    <filter string="Priority" name="priority" context="{'group_by': 'manual_priority'}"/>
+                    <filter string="Customer Urgency" name="customer_urgency" context="{'group_by': 'customer_urgency'}"/>
+                    <separator/>
+                    <filter string="At Capacity" name="at_capacity" domain="[('team_capacity_warning', '=', True)]"/>
+                    <filter string="Has Dependencies" name="has_dependencies" domain="[('blocked_by_count', '>', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_project_teams"
+                  name="Teams"
+                  parent="project.menu_main_pm"
+                  action="action_project_team"
+                  sequence="5"/>
+
+        <!-- Actions -->
+        <record id="action_project_team" model="ir.actions.act_window">
+            <field name="name">Project Teams</field>
+            <field name="res_model">project.team</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first project team!
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
