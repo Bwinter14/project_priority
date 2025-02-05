@@ -44,10 +44,10 @@ jobs:
           docker run -d --name odoo-test \
             --network ${{ job.services.db.network }} \
             -e HOST=db -e USER=odoo -e PASSWORD=odoo \
-            --memory=2g --memory-swap=2g \
+            --memory=2g --memory-swap=2g \  # Prevents OOM Kill
             odoo:18.0 \
             --db_host=db --db_user=odoo --db_password=odoo \
-            --workers=1 --max-cron-threads=0 -i base --stop-after-init
+            --workers=0 --max-cron-threads=0 --limit-memory-soft=512000000 --limit-memory-hard=768000000 -i base --stop-after-init
 
       - name: Run Odoo Tests
         run: |
