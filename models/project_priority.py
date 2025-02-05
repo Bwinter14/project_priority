@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields  # noqa: E0401
 
 
 class ProjectProject(models.Model):
