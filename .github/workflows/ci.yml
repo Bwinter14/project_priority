@@ -37,7 +37,7 @@ jobs:
     needs: lint
     
     services:
-      db:
+      postgres:
         image: postgres:15
         env:
           POSTGRES_DB: odoo
@@ -45,32 +45,26 @@ jobs:
           POSTGRES_PASSWORD: odoo
         ports:
           - 5432:5432
-        container_name: db
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        networks:
-          - odoo-network
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Odoo Network
-        run: docker network create odoo-network
-
       - name: Start Odoo and Initialize Base Module
         run: |
           docker run -d --name odoo-test \
-            --network odoo-network \
-            -e DB_HOST=db \
+            --network host \
+            -e DB_HOST=localhost \
             -e DB_USER=odoo \
             -e DB_PASSWORD=odoo \
             --memory=4g --memory-swap=4g \
             odoo:18.0 \
-            -- --db_host=db \
+            -- --db_host=localhost \
                --db_port=5432 \
                --db_user=odoo \
                --db_password=odoo \
@@ -88,7 +82,7 @@ jobs:
       - name: Run Odoo Tests
         run: |
           docker exec odoo-test odoo \
-            --db_host=db \
+            --db_host=localhost \
             --db_port=5432 \
             --db_user=odoo \
             --db_password=odoo \
@@ -105,8 +99,3 @@ jobs:
         if: always()
         run: |
           docker rm -f odoo-test
-          docker network rm odoo-network
-
-networks:
-  odoo-network:
-    driver: bridge
