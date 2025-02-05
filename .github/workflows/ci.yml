@@ -21,7 +21,9 @@ jobs:
           POSTGRES_PASSWORD: odoo
         ports:
           - 5432:5432
-        options: --health-cmd "pg_isready -U odoo -d odoo" --health-interval 10s --health-retries 5 --health-timeout 5s
+        options: > 
+          --health-cmd "pg_isready -U odoo -d odoo" 
+          --health-interval 10s --health-retries 5 --health-timeout 5s
 
     steps:
       - name: Checkout Repository
@@ -41,13 +43,22 @@ jobs:
 
       - name: Ensure PostgreSQL is Fully Ready
         run: |
-          echo "Checking PostgreSQL readiness..."
           until docker exec $(docker ps -q -f ancestor=postgres:15) \
           pg_isready -U odoo -d odoo; do
             echo "Database still starting, waiting 5s..."
             sleep 5
           done
           echo "PostgreSQL is fully ready!"
+
+      - name: Initialize Odoo Database
+        run: |
+          docker run --rm --name odoo-init \
+            --network="host" \
+            -e HOST=db \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            --memory=1.5g --memory-swap=2g \
+            odoo:18.0 bash -c 'odoo --db_host=db --db_user=odoo --db_password=odoo -i base --stop-after-init'
 
       - name: Start Odoo in Minimal Mode
         run: |
@@ -59,7 +70,7 @@ jobs:
             --memory=1.5g --memory-swap=2g \
             odoo:18.0 bash -c 'odoo --db_host=db --db_user=odoo --db_password=odoo \
             --workers=0 --max-cron-threads=0 --limit-memory-soft=256000000 --limit-memory-hard=512000000 \
-            --limit-time-cpu=120 --limit-time-real=240 -i base --stop-after-init'
+            --limit-time-cpu=120 --limit-time-real=240'
 
       - name: Run Odoo Tests
         run: |
