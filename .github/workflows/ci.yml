@@ -52,4 +52,21 @@ jobs:
       - name: Start Odoo in Minimal Mode
         run: |
           docker run -d --name odoo-test \
-            --network="host
+            --network="host" \
+            -e HOST=db \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            --memory=1.5g --memory-swap=2g \
+            odoo:18.0 bash -c 'odoo --db_host=db --db_user=odoo --db_password=odoo \
+            --workers=0 --max-cron-threads=0 --limit-memory-soft=256000000 --limit-memory-hard=512000000 \
+            --limit-time-cpu=120 --limit-time-real=240 -i base --stop-after-init'
+
+      - name: Run Odoo Tests
+        run: |
+          docker exec odoo-test odoo \
+            --db_host=db --db_user=odoo --db_password=odoo \
+            --test-enable --stop-after-init --log-level=debug
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f odoo-test
