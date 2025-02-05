@@ -42,18 +42,18 @@ jobs:
       - name: Start Odoo and Initialize Base Module
         run: |
           docker run -d --name odoo-test \
-          --network ${{ job.services.db.network }} \
-          -e HOST=db -e USER=odoo -e PASSWORD=odoo \
-          --memory=2g --memory-swap=2g \  # Prevents OOM kill
-          odoo:18.0 \
-          --db_host=db --db_user=odoo --db_password=odoo \
-          --workers=1 --max-cron-threads=0 -i base --stop-after-init
+            --network ${{ job.services.db.network }} \
+            -e HOST=db -e USER=odoo -e PASSWORD=odoo \
+            --memory=2g --memory-swap=2g \
+            odoo:18.0 \
+            --db_host=db --db_user=odoo --db_password=odoo \
+            --workers=1 --max-cron-threads=0 -i base --stop-after-init
 
       - name: Run Odoo Tests
         run: |
           docker exec odoo-test odoo \
-          --db_host=db --db_user=odoo --db_password=odoo \
-          --test-enable --stop-after-init --log-level=test
+            --db_host=db --db_user=odoo --db_password=odoo \
+            --test-enable --stop-after-init --log-level=test
 
       - name: Cleanup
         if: always()
