@@ -1,3 +1,8 @@
-from . import project_priority  # noqa: F401
+"""
+Project Priority module initialization.
 
-# Ensure a newline at the end of the file
+This module extends Odoo's project management functionality by adding
+priority scoring and management capabilities.
+"""
+
+from . import project_priority
