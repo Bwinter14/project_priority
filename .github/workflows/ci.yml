@@ -1,13 +1,3 @@
-name: Odoo CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   test:
     name: Run Odoo Tests
@@ -39,7 +29,7 @@ jobs:
           done
           echo "PostgreSQL is ready!"
 
-      - name: Start Odoo with Base Module Initialization
+      - name: Start Odoo and Initialize Base Module
         run: |
           docker run -d --name odoo-test \
           --network ${{ job.services.db.network }} \
@@ -49,6 +39,6 @@ jobs:
 
       - name: Run Odoo Tests
         run: |
-          docker exec odoo-test odoo-bin \
+          docker exec odoo-test odoo \
           --db_host=db --db_user=odoo --db_password=odoo \
           --test-enable --init project_priority --stop-after-init
