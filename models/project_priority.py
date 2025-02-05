@@ -112,3 +112,4 @@ class ProjectProject(models.Model):
         if not self.env.user.has_group('project_priority.group_project_priority_ceo'):
             raise AccessError("Only CEO can override project priority")
         self.write({'is_ceo_override': True})
+        
