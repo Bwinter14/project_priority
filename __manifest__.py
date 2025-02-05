@@ -2,7 +2,10 @@
     'name': 'Project Priority',
     'version': '18.0.1.0.0',
     'category': 'Project',
-    'summary': 'Automated project prioritization with manual override capabilities',
+    'summary': (
+        'Automated project prioritization with '
+        'manual override capabilities'
+    ),
     'author': 'Your Company',
     'website': 'https://www.yourcompany.com',
     'license': 'AGPL-3',
@@ -17,3 +20,5 @@
     'application': False,
     'auto_install': False,
 }
+
+# Ensure a newline at the end of the file
