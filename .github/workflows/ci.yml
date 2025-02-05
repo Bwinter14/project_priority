@@ -39,15 +39,26 @@ jobs:
           done
           echo "PostgreSQL is ready!"
 
+      - name: Ensure PostgreSQL is Fully Ready
+        run: |
+          echo "Checking PostgreSQL readiness..."
+          until docker exec $(docker ps -q -f ancestor=postgres:15) \
+          pg_isready -U odoo -d odoo; do
+            echo "Database still starting, waiting 5s..."
+            sleep 5
+          done
+          echo "PostgreSQL is fully ready!"
+
       - name: Start Odoo and Initialize Base Module
         run: |
           docker run -d --name odoo-test \
-            --network ${{ job.services.db.network }} \
-            -e HOST=db -e USER=odoo -e PASSWORD=odoo \
-            --memory=2g --memory-swap=2g \  # Prevents OOM Kill
-            odoo:18.0 \
-            --db_host=db --db_user=odoo --db_password=odoo \
-            --workers=0 --max-cron-threads=0 --limit-memory-soft=512000000 --limit-memory-hard=768000000 -i base --stop-after-init
+            --network="host" \
+            -e HOST=db \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            --memory=2g --memory-swap=2g \
+            odoo:18.0 bash -c "odoo --db_host=db --db_user=odoo --db_password=odoo \
+            --workers=0 --max-cron-threads=0 --limit-memory-soft=512000000 --limit-memory-hard=768000000 -i base --stop-after-init"
 
       - name: Run Odoo Tests
         run: |
