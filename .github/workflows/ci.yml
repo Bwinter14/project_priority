@@ -1,3 +1,13 @@
+name: Odoo CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   test:
     name: Run Odoo Tests
