@@ -36,6 +36,8 @@ class ProjectTeam(models.Model):
         tracking=True
     )
 
+    project_ids = fields.One2many('project.project', 'team_id', string='Projects')
+
     @api.depends('member_ids', 'project_ids')
     def _compute_current_capacity(self):
         for team in self:
@@ -156,6 +158,7 @@ class ProjectProject(models.Model):
         - Customer urgency
         - Manual priority settings
         """
+        today = fields.Date.today()
         for project in self:
             if project.is_ceo_override:
                 project.priority_score = 100.0
@@ -165,7 +168,7 @@ class ProjectProject(models.Model):
 
             # Deadline weight calculation
             if project.date_deadline:
-                days_to_deadline = (project.date_deadline - fields.Date.today()).days
+                days_to_deadline = (project.date_deadline - today).days
                 if days_to_deadline <= 0:
                     deadline_score = 100
                 elif days_to_deadline <= 7:
