@@ -12,7 +12,7 @@ from odoo.exceptions import AccessError
 class ProjectProject(models.Model):
     """
     Extends the project.project model to add priority management features.
-    
+
     This class adds automated priority scoring based on multiple factors including
     deadlines, inventory impact, and customer urgency. It also supports manual
     priority overrides with appropriate access controls.
@@ -32,7 +32,7 @@ class ProjectProject(models.Model):
         ('2', 'Very High'),
         ('3', 'Critical')
     ], string='Manual Priority', default='0', tracking=True)
-    
+
     deadline_weight = fields.Float(
         string='Deadline Weight',
         default=1.0,
@@ -44,14 +44,14 @@ class ProjectProject(models.Model):
         ('2', 'Medium'),
         ('3', 'High')
     ], string='Inventory Impact', default='0', tracking=True)
-    
+
     customer_urgency = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
         ('2', 'Urgent'),
         ('3', 'Critical')
     ], string='Customer Urgency', default='0', tracking=True)
-    
+
     is_ceo_override = fields.Boolean(
         string='CEO Priority Override',
         default=False,
@@ -62,7 +62,7 @@ class ProjectProject(models.Model):
     def _compute_priority_score(self):
         """
         Compute the priority score based on multiple factors.
-        
+
         The score is calculated using a weighted combination of:
         - Deadline proximity
         - Inventory impact
@@ -75,7 +75,7 @@ class ProjectProject(models.Model):
                 continue
 
             score = 0.0
-            
+
             # Deadline weight calculation
             if project.deadline:
                 days_to_deadline = (project.deadline - fields.Date.today()).days
@@ -106,7 +106,7 @@ class ProjectProject(models.Model):
     def action_set_ceo_override(self):
         """
         Set CEO priority override with appropriate access control.
-        
+
         This method can only be called by users with CEO access rights.
         """
         if not self.env.user.has_group('project_priority.group_project_priority_ceo'):

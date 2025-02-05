@@ -1,0 +1,38 @@
+[MASTER]
+# Add the Odoo module directory to the Python path
+init-hook='import sys; sys.path.append(".")'
+
+# Discover python modules and packages in the base directory
+recursive=yes
+
+[MESSAGES CONTROL]
+# Disable specific warnings
+disable=
+    import-error,  # Odoo imports will work in the actual environment
+    too-few-public-methods,  # Not relevant for Odoo model classes
+    missing-class-docstring,  # We already have good docstrings
+    missing-module-docstring  # We already have good docstrings
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=120
+
+[BASIC]
+# Regular expression which should only match function or class names
+function-rgx=[a-z_][a-z0-9_]{2,50}$
+class-rgx=[A-Z_][a-zA-Z0-9_]+$
+
+# Regular expression which should only match correct module level names
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+[SIMILARITIES]
+# Minimum lines number of a similarity
+min-similarity-lines=8
+
+[TYPECHECK]
+# List of module names for which member attributes should not be checked
+ignored-modules=odoo,odoo.exceptions
+
+[MISCELLANEOUS]
+# List of note tags to take into consideration
+notes=FIXME,XXX,TODO
