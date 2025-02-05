@@ -82,8 +82,8 @@ class ProjectProject(models.Model):
             score = 0.0
 
             # Deadline weight calculation
-            if project.deadline:
-                days_to_deadline = (project.deadline - fields.Date.today()).days
+            if project.date_deadline:
+                days_to_deadline = (project.date_deadline - fields.Date.today()).days
                 if days_to_deadline <= 0:
                     deadline_score = 100
                 elif days_to_deadline <= 7:
