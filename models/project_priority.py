@@ -77,7 +77,7 @@ class ProjectProject(models.Model):
         store=True,
         help='Automatically calculated priority score'
     )
-    date_deadline = fields.Date(
+    date_deadline = fields.Date(  # ✅ Ensure the correct field name is used
         string='Deadline',
         tracking=True,
         help='Project completion deadline'
@@ -166,7 +166,7 @@ class ProjectProject(models.Model):
 
             score = 0.0
 
-            # Deadline weight calculation
+            # ✅ Ensure the correct field name is used
             if project.date_deadline:
                 days_to_deadline = (project.date_deadline - today).days
                 if days_to_deadline <= 0:
