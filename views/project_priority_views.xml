@@ -27,8 +27,15 @@
                             <page string="Team Members">
                                 <field name="member_ids" widget="many2many_tags"/>
                             </page>
-                            <page string="Projects">
-                                <field name="project_ids"/>
+                            <page string="Custom Priority Labels">
+                                <field name="custom_priority_labels">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="color" widget="color_picker"/>
+                                        <field name="weight"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -153,7 +160,7 @@
                         </div>
                         <div class="oe_kanban_bottom_right">
                             <field name="manual_priority" widget="priority"/>
-                            <field name="team_priority_label_id"/>
+                            <field name="team_priority_label_id" widget="label_selection"/>
                         </div>
                     </div>
                 </xpath>
