@@ -51,3 +51,8 @@ logs/
 # System Files
 .DS_Store
 Thumbs.db
+echo "__pycache__/" >> .gitignore
+echo "*.pyc" >> .gitignore
+echo "*.pyo" >> .gitignore
+echo "*.egg-info" >> .gitignore
+echo ".vscode/" >> .gitignore
