@@ -5,91 +5,8 @@ This module implements priority scoring and management for Odoo projects,
 including automated calculations and manual overrides.
 """
 
-try:
-    from odoo import models, fields, api
-    from odoo.exceptions import AccessError
-except ImportError:
-    # For development environment where Odoo might not be installed
-    class models:
-        Model = object
-    class fields:
-        Char = str
-        Many2one = object
-        Many2many = list
-        Float = float
-        Integer = int
-        Boolean = bool
-        Selection = object
-        Date = object
-    class api:
-        @staticmethod
-        def depends(*_args):
-            """
-            Mock implementation of Odoo's @api.depends decorator.
-            
-            Args:
-                *_args: Field names that the computed field depends on
-                       (unused in mock implementation)
-            
-            Returns:
-                decorator: A function decorator that simulates @api.depends
-            """
-            def decorator(func):
-                return func
-            return decorator
-    class AccessError(Exception):
-        pass
-
-
-class ProjectTeam(models.Model):
-    _name = 'project.team'
-    _description = 'Project Team'
-    _inherit = ['mail.thread']
-
-    name = fields.Char(required=True, tracking=True)
-    leader_id = fields.Many2one('res.users', string='Team Leader', required=True, tracking=True)
-    member_ids = fields.Many2many('res.users', string='Team Members', tracking=True)
-    current_capacity = fields.Float(
-        string='Current Capacity',
-        compute='_compute_current_capacity',
-        store=True,
-        tracking=True
-    )
-    capacity_threshold = fields.Float(
-        string='Capacity Threshold',
-        default=80.0,
-        help='Percentage at which capacity warning is triggered',
-        tracking=True
-    )
-    deadline_threshold_days = fields.Integer(
-        string='Deadline Warning Threshold',
-        default=7,
-        help='Days before deadline to show warning',
-        tracking=True
-    )
-
-    project_ids = fields.One2many('project.project', 'team_id', string='Projects')
-
-    @api.depends('member_ids', 'project_ids')
-    def _compute_current_capacity(self):
-        for team in self:
-            total_capacity = len(team.member_ids) * 100 if team.member_ids else 1
-            team.current_capacity = (len(team.project_ids) / total_capacity) * 100
-
-
-class ProjectTeamPriorityLabel(models.Model):
-    _name = 'project.team.priority.label'
-    _description = 'Team Priority Label'
-    _order = 'sequence'
-
-    name = fields.Char(required=True)
-    team_id = fields.Many2one('project.team', required=True, ondelete='cascade')
-    sequence = fields.Integer(default=10)
-    color = fields.Integer()
-    weight = fields.Float(
-        default=1.0,
-        help='Weight factor for priority calculation'
-    )
+from odoo import models, fields, api
+from odoo.exceptions import AccessError
 
 
 class ProjectProject(models.Model):
@@ -227,11 +144,13 @@ class ProjectProject(models.Model):
 
     @api.depends('dependency_project_ids')
     def _compute_blocked_by_count(self):
+        """Compute the number of projects that this project depends on."""
         for project in self:
             project.blocked_by_count = len(project.dependency_project_ids)
 
     @api.depends('team_id', 'team_id.current_capacity', 'team_id.capacity_threshold')
     def _compute_team_capacity_warning(self):
+        """Determine if the team is at or over capacity."""
         for project in self:
             if project.team_id:
                 project.team_capacity_warning = (
@@ -245,8 +164,9 @@ class ProjectProject(models.Model):
         Set CEO priority override with appropriate access control.
 
         This method can only be called by users with CEO access rights.
+        Raises:
+            AccessError: If the user doesn't have CEO access rights
         """
         if not self.env.user.has_group('project_priority.group_project_priority_ceo'):
             raise AccessError("Only CEO can override project priority")
         self.write({'is_ceo_override': True})
-        

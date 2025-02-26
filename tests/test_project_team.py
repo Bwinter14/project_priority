@@ -44,4 +44,3 @@ def test_team_member_management(mock_environment):
     # Change team leader
     team.write({'leader_id': new_member.id})
     assert team.leader_id == new_member
-    

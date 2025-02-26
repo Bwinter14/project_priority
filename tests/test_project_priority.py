@@ -47,4 +47,3 @@ def test_access_rights(mock_environment):
         'is_ceo_override': True,
         'manual_priority': '3'
     })
-    
