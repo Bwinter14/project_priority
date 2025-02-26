@@ -22,7 +22,12 @@ except ImportError:
         Selection = object
         Date = object
     class api:
-        depends = lambda *args: lambda func: func
+        # Fix C3001: Replace lambda with def
+        @staticmethod
+        def depends(*args):
+            def decorator(func):
+                return func
+            return decorator
     class AccessError(Exception):
         pass
 
@@ -234,4 +239,3 @@ class ProjectProject(models.Model):
         if not self.env.user.has_group('project_priority.group_project_priority_ceo'):
             raise AccessError("Only CEO can override project priority")
         self.write({'is_ceo_override': True})
-        
