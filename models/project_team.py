@@ -10,7 +10,7 @@ from odoo import models, fields, api
 
 class ProjectTeam(models.Model):
     """Project team model for managing team resources and capacity."""
-    
+
     _name = 'project.team'
     _description = 'Project Team'
     _inherit = ['mail.thread']
@@ -45,4 +45,3 @@ class ProjectTeam(models.Model):
         for team in self:
             total_capacity = len(team.member_ids) * 100 if team.member_ids else 1
             team.current_capacity = (len(team.project_ids) / total_capacity) * 100
-            

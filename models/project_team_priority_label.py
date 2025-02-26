@@ -9,10 +9,11 @@ from odoo import models, fields
 
 class ProjectTeamPriorityLabel(models.Model):
     """Team-specific priority labels for projects."""
-    
+
     _name = 'project.team.priority.label'
     _description = 'Team Priority Label'
     _order = 'sequence'
+
     name = fields.Char(required=True)
     team_id = fields.Many2one('project.team', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
