@@ -13,7 +13,6 @@ class ProjectTeamPriorityLabel(models.Model):
     _name = 'project.team.priority.label'
     _description = 'Team Priority Label'
     _order = 'sequence'
-
     name = fields.Char(required=True)
     team_id = fields.Many2one('project.team', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
@@ -22,4 +21,3 @@ class ProjectTeamPriorityLabel(models.Model):
         default=1.0,
         help='Weight factor for priority calculation'
     )
-    
