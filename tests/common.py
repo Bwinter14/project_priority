@@ -88,3 +88,4 @@ class TestProjectPriorityCommon(TransactionCase):
             'is_ceo_override': False,
             'manual_priority': '1'
         })
+        
