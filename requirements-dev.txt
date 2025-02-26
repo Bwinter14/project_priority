@@ -1,0 +1,9 @@
+# Development Dependencies
+flake8>=6.1.0
+pylint>=3.0.3
+bandit>=1.7.7
+safety>=2.3.5
+pytest>=7.4.4
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+black>=24.2.0

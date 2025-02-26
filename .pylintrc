@@ -11,7 +11,9 @@ disable=
     import-error,  # Odoo imports will work in the actual environment
     too-few-public-methods,  # Not relevant for Odoo model classes
     missing-class-docstring,  # We already have good docstrings
-    missing-module-docstring  # We already have good docstrings
+    missing-module-docstring,  # We already have good docstrings
+    invalid-name,  # Allow unittest standard names like setUp
+    duplicate-code  # Allow similar test setup code
 
 [FORMAT]
 # Maximum number of characters on a single line
