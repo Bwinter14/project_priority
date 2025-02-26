@@ -45,3 +45,4 @@ class ProjectTeam(models.Model):
         for team in self:
             total_capacity = len(team.member_ids) * 100 if team.member_ids else 1
             team.current_capacity = (len(team.project_ids) / total_capacity) * 100
+            

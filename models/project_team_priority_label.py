@@ -22,3 +22,4 @@ class ProjectTeamPriorityLabel(models.Model):
         default=1.0,
         help='Weight factor for priority calculation'
     )
+    
